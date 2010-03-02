@@ -1,0 +1,14 @@
+Source: metronome-state
+Section: core
+Maintainer: Mikhail Gusarov <dottedmag@dottedmag.net>
+Build-Depends: debhelper (>= 7)
+XCS-Cross-Host-Build-Depends: debhelper (>= 7)
+Priority: optional
+Standards-Version: 3.8.3
+
+Package: metronome-state
+Priority: optional
+Architecture: all
+Depends: ${shlibs:Depends}
+Description: metronome ePaper display state controller
+ This package saves/restores metronome ePaper display settings on reboot
