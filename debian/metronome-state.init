@@ -1,27 +1,38 @@
 #!/bin/sh -e
 
+DEFAULT_THRESHOLD=90
+CONFIG=/etc/default/metronome_state
+
+[ ! -f $CONFIG ] || . $CONFIG
+
 STATE_FILE=/sys/class/graphics/fb1/manual_refresh_threshold
 SAVED_STATE_FILE=/var/lib/metronome-state/manual_refresh_threshold
 
 start() {
-    [ ! -f $SAVED_STATE_FILE ] || cat $SAVED_STATE_FILE > $STATE_FILE
+  if [ -f $SAVED_STATE_FILE ]; then
+    cat $SAVED_STATE_FILE > $STATE_FILE
+  else
+    echo $DEFAULT_THRESHOLD > $STATE_FILE
+  fi
 }
 stop() {
-    mkdir -p $(dirname $SAVED_STATE_FILE)
-    cat $STATE_FILE > $SAVED_STATE_FILE
+  mkdir -p $(dirname $SAVED_STATE_FILE)
+  cat $STATE_FILE > $SAVED_STATE_FILE
 }
 
 case "$1" in
-    start)
-        start;;
-    stop)
-        stop;;
-    restart|force-reload)
-        stop
-        start
-        ;;
-    *)
-        echo "Usage: $0 {start|stop|restart|force-reload}"
-        exit 1
+  start)
+    start;;
+  stop)
+    stop;;
+  restart|force-reload)
+    stop
+    start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|force-reload}"
+    exit 1
     ;;
 esac
+
+exit 0
